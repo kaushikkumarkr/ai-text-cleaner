@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free tool to clean AI formatting, remove markdown, fix spacing, and count words. Perfect for cleaning text from ChatGPT, Gemini, and Claude before pasting into emails or essays.">
+    <title>CleanText Pro | AI Text Formatter & Word Counter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="container">
+            <h1>CleanText Pro: Free AI Text Formatter & Word Counter</h1>
+            <p>Instantly clean, format, and perfect your AI-generated text.</p>
+        </div>
+    </header>
+
+    <main class="app-main container">
+        <section class="editor-section">
+            <div class="toolbar">
+                <button id="btn-clean" class="btn primary" title="Remove markdown icons and <br> tags">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                    Clean AI Formatting
+                </button>
+                <button id="btn-spacing" class="btn secondary" title="Remove extra spaces and trailing whitespaces">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16"/><path d="M4 15h16"/><path d="M10 3L8 5l2 2"/><path d="M14 21l2-2-2-2"/></svg>
+                    Fix Spacing
+                </button>
+                <button id="btn-sentence" class="btn secondary" title="Capitalize only the first letter of sentences">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+                    Sentence Case
+                </button>
+                <button id="btn-copy" class="btn accent ms-auto">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    <span id="copy-text">Copy to Clipboard</span>
+                </button>
+            </div>
+            
+            <div class="textarea-wrapper">
+                <textarea id="text-input" placeholder="Paste your AI text here from ChatGPT, Gemini, Claude, etc..."></textarea>
+            </div>
+        </section>
+
+        <aside class="stats-sidebar">
+            <div class="stat-card">
+                <span class="stat-label">Words</span>
+                <span class="stat-value" id="stat-words">0</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Characters</span>
+                <span class="stat-value" id="stat-chars">0</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Reading Time</span>
+                <span class="stat-value" id="stat-reading">0 min</span>
+            </div>
+        </aside>
+    </main>
+
+    <article class="seo-article container">
+        <h2>About CleanText Pro</h2>
+        <div class="article-content">
+            <!-- SEO Text placeholder -->
+            <p>CleanText Pro is the ultimate free online tool to instantly format and clean your AI-generated text. Whether you are copying responses from ChatGPT, Google Gemini, or Claude, our tool seamlessly removes pesky markdown asterisks, hash tags, and unwanted line breaks. Ensure your text is perfectly formatted and ready to be pasted into emails, essays, or professional documents.</p>
+            <p>Enjoy real-time statistics including accurate word counts and estimated reading times, helping you optimize your content for any audience. Clean, format, and copy—all within a fast, privacy-focused, single-page application.</p>
+        </div>
+    </article>
+
+    <script src="script.js"></script>
+</body>
+</html>
