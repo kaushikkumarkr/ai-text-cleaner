@@ -3,9 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnClean = document.getElementById('btn-clean');
     const btnSpacing = document.getElementById('btn-spacing');
     const btnSentence = document.getElementById('btn-sentence');
+    const btnTitle = document.getElementById('btn-title');
+    const btnDownload = document.getElementById('btn-download');
+    const btnClear = document.getElementById('btn-clear');
     const btnCopy = document.getElementById('btn-copy');
     const copyTextSpan = document.getElementById('copy-text');
-    
+
     const statWords = document.getElementById('stat-words');
     const statChars = document.getElementById('stat-chars');
     const statReading = document.getElementById('stat-reading');
@@ -17,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update real-time stats
     const updateStats = () => {
         const text = textInput.value;
-        
+
         // Character count
         const charCount = text.length;
         statChars.textContent = charCount.toLocaleString();
@@ -35,17 +38,30 @@ document.addEventListener('DOMContentLoaded', () => {
     // Clean AI Formatting
     const cleanAIText = () => {
         let text = textInput.value;
-        
-        // Remove markdown symbols: ** bold, * italic, ### headings, > quotes, ` code
-        // and <br> or <br/> tags
-        
+        // --- Advanced Cleaners (V2) ---
+        // 1. Remove Zero-width spaces and invisible formatting characters
+        text = text.replace(/[\u200B-\u200D\uFEFF]/g, '');
+
+        // 2. Convert Non-breaking spaces to regular spaces
+        text = text.replace(/\u00A0/g, ' ');
+
+        // 3. Normalize smart quotes to standard straight quotes
+        text = text.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
+
+        // 4. Normalize em/en dashes to hyphens
+        text = text.replace(/[—–]/g, '-');
+
+        // 5. Normalize ellipsis
+        text = text.replace(/…/g, '...');
+
+        // --- Standard Markdown Cleaners ---
         // Remove bold/italics
-        text = text.replace(/(?:\*\*|__)(.*?)(?:\*\*|__)/g, '$1'); 
-        text = text.replace(/(?:\*|_)(.*?)(?:\*|_)/g, '$1'); 
-        
+        text = text.replace(/(?:\*\*|__)(.*?)(?:\*\*|__)/g, '$1');
+        text = text.replace(/(?:\*|_)(.*?)(?:\*|_)/g, '$1');
+
         // Remove headings (e.g. ### Heading)
         text = text.replace(/^#{1,6}\s+/gm, '');
-        
+
         // Remove blockquotes (e.g. > Quote)
         text = text.replace(/^>\s+/gm, '');
 
@@ -54,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Remove <br> tags (HTML breaks)
         text = text.replace(/<br\s*\/?>/gi, '\n');
-        
+
         // NOTE: Textarea natively strips rich text HTML (like gray backgrounds) when pasted 
         // as plain text. The user is just dealing with string contents here.
 
@@ -66,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fix Spacing
     const fixSpacing = () => {
         let text = textInput.value;
-        
+
         // Replace multiple spaces with a single space
         text = text.replace(/[ \t]{2,}/g, ' ');
 
@@ -87,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sentence Case
     const toSentenceCase = () => {
         let text = textInput.value;
-        
+
         // Make everything lowercase first (optional: maybe just lowercasing the rest of the sentence, 
         // but typically sentence case means First letter cap, rest lower, preserving I, proper nouns if possible.
         // Doing full lowercase loses proper nouns. Instead we just ensure the first letter of sentences is capitalized
@@ -95,9 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // The safest approach that doesn't ruin proper nouns is just capitalizing the first letter of sentences,
         // and leaving the rest as they are, OR standardizing it entirely. 
         // Let's do: lowercase everything, then capitalize first letter of sentences.
-        
+
         text = text.toLowerCase();
-        
+
         // Capitalize first letter of every sentence (after ., !, ?)
         text = text.replace(/(^\s*|[.!?]\s+|\n\s*)([a-z])/g, (match, separator, letter) => {
             return separator + letter.toUpperCase();
@@ -114,13 +130,49 @@ document.addEventListener('DOMContentLoaded', () => {
         triggerPopAnimation(btnSentence);
     };
 
+    // Title Case
+    const toTitleCase = () => {
+        let text = textInput.value;
+        text = text.toLowerCase().replace(/(?:^|\s|-)\w/g, (match) => match.toUpperCase());
+        textInput.value = text;
+        updateStats();
+        triggerPopAnimation(btnTitle);
+    };
+
+    // Download as .txt
+    const downloadTxt = () => {
+        const text = textInput.value;
+        if (!text) return;
+
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'cleaned_text.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        triggerPopAnimation(btnDownload);
+    };
+
+    // Clear Text
+    const clearText = () => {
+        if (confirm("Are you sure you want to clear all text?")) {
+            textInput.value = '';
+            updateStats();
+            triggerPopAnimation(btnClear);
+        }
+    };
+
     // Copy to Clipboard
     const copyText = async () => {
         if (!textInput.value) return;
 
         try {
             await navigator.clipboard.writeText(textInput.value);
-            
+
             // Temporary success state
             btnCopy.classList.add('success');
             copyTextSpan.textContent = 'Copied!';
@@ -149,6 +201,9 @@ document.addEventListener('DOMContentLoaded', () => {
     btnClean.addEventListener('click', cleanAIText);
     btnSpacing.addEventListener('click', fixSpacing);
     btnSentence.addEventListener('click', toSentenceCase);
+    btnTitle.addEventListener('click', toTitleCase);
+    btnDownload.addEventListener('click', downloadTxt);
+    btnClear.addEventListener('click', clearText);
     btnCopy.addEventListener('click', copyText);
 
     // Initial stat calculation
